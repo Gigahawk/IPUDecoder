@@ -38,6 +38,13 @@ int Get(int numBits)
 	return(buf);
 }
 
+FILE * Nulling_Fclose(FILE *fp)
+{
+	if (fp != NULL)
+		fclose(fp);
+	return NULL;
+}
+
 typedef struct t_MBData		/*	Macroblock data	*/
 {
 	long int Byte;
@@ -651,7 +658,6 @@ int convert_ipu(char *infilename, char *outfilename, long int Start, char *ipumo
 	putbits(&outfile, 0x1b7, 32);		// Ende
 
 	free(MBData);
-	fclose(infile);
 	close();
 	exit(0);
 }
@@ -660,11 +666,11 @@ void close(void) {
 	unsigned int length;
 
 	if (infile != NULL) {
-		fclose(infile);	// close file
+		infile = Nulling_Fclose(infile);	// close file
 	}
 	if (outfile.file != NULL) {
 		putbuf(&outfile);		// flush buffer
-		fclose(outfile.file);	// close file
+		outfile.file = Nulling_Fclose(outfile.file);	// close file
 	}
 }
 
